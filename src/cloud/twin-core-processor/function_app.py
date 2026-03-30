@@ -49,7 +49,29 @@ def iothub_processor(azeventhub: app.EventHubEvent, outputDocument: app.Out[app.
         "reasons": reasons,
         "observed_metrics": data
     }
+    
     # Enviamos el JSON a la base de datos
     outputDocument.set(app.Document.from_dict(twin_state))
 
     logging.info(f"--- GEMELO ACTUALIZADO Y ALMACENADO EN LA BBDD: {json.dumps(twin_state, indent=2)} ---")
+
+@fb_app.route(route="get_rsu_status", auth_level=app.AuthLevel.ANONYMOUS)
+@fb_app.cosmos_db_input(arg_name="documents", 
+                       database_name="v2x-database", 
+                       container_name="rsu-telemetry-history", 
+                       sql_query="SELECT TOP 1 * FROM c ORDER BY c._ts DESC",
+                       connection="CosmosDbConnectionString")
+def get_rsu_status(req: app.HttpRequest, documents: app.DocumentList) -> app.HttpResponse:
+    logging.info("API: Consulta de estado recibida.")
+
+    if not documents:
+        return app.HttpResponse("No hay datos en el Gemelo Digital.", status_code=404)
+
+    # Convertimos el último documento a JSON
+    last_state = documents[0].to_dict()
+    
+    return app.HttpResponse(
+        body=json.dumps(last_state, indent=2),
+        mimetype="application/json",
+        status_code=200
+    )
