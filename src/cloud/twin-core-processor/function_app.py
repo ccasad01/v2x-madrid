@@ -10,7 +10,11 @@ fb_app = app.FunctionApp()
 @fb_app.event_hub_message_trigger(arg_name="azeventhub", 
                                event_hub_name="hub-v2x-madrid", # Nombre de tu hub
                                connection="IoTHubConnectionString") 
-def iothub_processor(azeventhub: app.EventHubEvent):
+@fb_app.cosmos_db_output(arg_name="outputDocument", 
+                        database_name="v2x-database", 
+                        container_name="rsu-telemetry-history", 
+                        connection="CosmosDbConnectionString")
+def iothub_processor(azeventhub: app.EventHubEvent, outputDocument: app.Out[app.Document]):
     # 1. Recibir el "Estado Observado" (Telemetría de Fedora)
     body = azeventhub.get_body().decode('utf-8')
     data = json.loads(body)
@@ -38,11 +42,14 @@ def iothub_processor(azeventhub: app.EventHubEvent):
 
     # 4. Generación del Estado del Gemelo (Base para el JSON-LD)
     twin_state = {
-        "id": data['nodeId'],
+        "id": f"{data['nodeId']}-{datetime.now(timezone.utc).timestamp()}", # ID único para Cosmos
+        "nodeId": data['nodeId'],
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "status": health,
         "reasons": reasons,
         "observed_metrics": data
     }
+    # Enviamos el JSON a la base de datos
+    outputDocument.set(app.Document.from_dict(twin_state))
 
-    logging.info(f"GEMELO ACTUALIZADO: {json.dumps(twin_state, indent=2)}")
+    logging.info(f"--- GEMELO ACTUALIZADO Y ALMACENADO EN LA BBDD: {json.dumps(twin_state, indent=2)} ---")

@@ -21,7 +21,7 @@ def send_telemetry(client):
                 "nodeId": "RSU-Madrid-01",
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "reportIntervalSec": 5,
-                "cpuPct": 95.5,
+                "cpuPct": 50.35,
                 "memPct": round(random.uniform(40.0, 60.0), 2),
                 "v2xLatencyMs": round(random.uniform(5.0, 25.0), 2),
                 "errors": {
