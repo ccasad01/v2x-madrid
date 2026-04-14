@@ -2,14 +2,22 @@
 import time
 import json
 import random
-import psutil #pip install psutil si no esta instalado
+import psutil
+import argparse # Añadimos esto para manejar argumentos por terminal
 from datetime import datetime, timezone
 from azure.iot.device import IoTHubDeviceClient
 
-CONNECTION_STRING = ""
+# --- GESTIÓN DE ARGUMENTOS ---
+parser = argparse.ArgumentParser(description='Agente RSU Madrid Multi-Nodo')
+parser.add_argument('--id', default="RSU-Madrid-01", help='ID del nodo (nodeId)')
+parser.add_argument('--conn', required=True, help='Connection String de Azure IoT Hub')
+parser.add_argument('--lat', type=float, default=40.4167, help='Latitud del nodo')
+parser.add_argument('--lon', type=float, default=-3.7037, help='Longitud del nodo')
+args = parser.parse_args()
 
 def create_client():
-    client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
+    # Usamos la cadena de conexión pasada por parámetro
+    client = IoTHubDeviceClient.create_from_connection_string(args.conn)
     return client
 
 def get_backend_metrics():
@@ -27,12 +35,12 @@ def get_backend_metrics():
     }
 
 def send_telemetry(client):
-    print("🚀 Iniciando agente RSU Madrid")
+    print(f"🚀 Iniciando agente RSU: {args.id}")
     try:
         while True:
             # Datos observados del nodo reales+simulados
             telemetry_data = {
-                "nodeId": "RSU-Madrid-01",
+                "nodeId": args.id, # Usamos el ID pasado por parámetro
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "version": "v2.2.0-cyber",
                 "hardware": {
@@ -53,12 +61,12 @@ def send_telemetry(client):
 
             # Envío a Azure IoT Hub
             client.send_message(message)
-            print(f"📡 Evento Ciber-Físico enviado: {telemetry_data['nodeId']} - Status: OK")
+            print(f"📡 Evento Ciber-Físico enviado: {args.id} - Status: OK")
             
             time.sleep(10) 
             
     except KeyboardInterrupt:
-        print("\n🛑 Agente detenido.")
+        print(f"\n🛑 Agente {args.id} detenido.")
     finally:
         client.shutdown()
 
