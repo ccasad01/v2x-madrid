@@ -56,7 +56,7 @@ def get_next_state(current_state, event):
     }
     return transitions.get(event, current_state)
 
-# --- ORQUESTADOR (Azure Function) ---
+# --- ORQUESTADOR ---
 @fb_app.event_hub_message_trigger(arg_name="azeventhub", 
                                event_hub_name="hub-v2x-madrid", 
                                connection="IoTHubConnectionString") 
@@ -120,3 +120,83 @@ def iothub_processor(azeventhub: app.EventHubEvent,
     twinModelUpdate.set(app.Document.from_dict(twin_doc))
     
     logging.info(f"Node: {node_id} | State: {previous_state} -> {new_state} | Event: {event}")
+
+# --- ENDPOINT PARA GRAFANA  ---
+@fb_app.route(route="get_rsu_status", auth_level=app.AuthLevel.ANONYMOUS)
+@fb_app.cosmos_db_input(arg_name="documents", 
+                       database_name="v2x-database", 
+                       container_name="rsu-twin-models", 
+                       sql_query="SELECT * FROM c", # Traemos todas las RSUs
+                       connection="CosmosDbConnectionString")
+def get_rsu_status(req: app.HttpRequest, documents: app.DocumentList) -> app.HttpResponse:
+    logging.info("API: Grafana solicitando estado de los Gemelos.")
+
+    if not documents:
+        return app.HttpResponse("No hay Gemelos registrados.", status_code=404)
+
+    # Convertimos la lista de Cosmos a una lista de diccionarios Python
+    twin_list = [doc.to_dict() for doc in documents]
+
+    # Aquí es donde inyectamos/aseguramos el JSON-LD para Grafana
+    # Envolvemos todo en un contexto semántico NGSI-LD
+    response_payload = {
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/context.jsonld",
+        "type": "QueryResponse",
+        "generatedAt": datetime.now(timezone.utc).isoformat(),
+        "entities": twin_list
+    }
+    
+    return app.HttpResponse(
+        body=json.dumps(response_payload, indent=2),
+        mimetype="application/json",
+        status_code=200
+    )
+
+# --- WATCHDOG: DETECTOR DE RSUS OFFLINE ---
+@fb_app.timer_trigger(schedule="0 */2 * * * *", arg_name="watchdogTimer", run_on_startup=False)
+@fb_app.cosmos_db_input(arg_name="allRSUs", 
+                       database_name="v2x-database", 
+                       container_name="rsu-twin-models", 
+                       sql_query="SELECT * FROM c WHERE c.currentState != 'OFFLINE'", # Solo miramos las que "estaban" vivas
+                       connection="CosmosDbConnectionString")
+@fb_app.cosmos_db_output(arg_name="updateOutput", 
+                        database_name="v2x-database", 
+                        container_name="rsu-twin-models", 
+                        connection="CosmosDbConnectionString")
+def watchdog_processor(watchdogTimer: app.TimerRequest, 
+                      allRSUs: app.DocumentList,
+                      updateOutput: app.Out[app.Document]):
+    
+    now = datetime.now(timezone.utc)
+    timeout_seconds = 300  # 5 minutos de silencio = OFFLINE
+    count_offline = 0
+
+    logging.info(f"WATCHDOG: Analizando {len(allRSUs)} nodos potencialmente activos...")
+
+    for rsu_doc in allRSUs:
+        last_update_str = rsu_doc.get('lastUpdate')
+        if not last_update_str:
+            continue
+        
+        # Convertimos el string ISO a objeto datetime
+        last_update = datetime.fromisoformat(last_update_str.replace('Z', '+00:00'))
+        
+        # Calculamos el tiempo de silencio
+        silence_duration = (now - last_update).total_seconds()
+
+        if silence_duration > timeout_seconds:
+            node_id = rsu_doc.get('nodeId')
+            
+            previous_state = rsu_doc.get('currentState', 'INIT')
+            new_state = get_next_state(previous_state, "TIME")
+            
+            logging.warning(f"WATCHDOG: Nodo {node_id} lleva {silence_duration}s en silencio. Marcando {new_state}.")
+            
+            rsu_doc['currentState'] = new_state
+            rsu_doc['reasons'] = [f"Timeout: No se recibe telemetría desde hace {int(silence_duration)}s"]
+            # ----------------------------------------------------
+            
+            updateOutput.set(app.Document.from_dict(rsu_doc))
+            count_offline += 1
+
+    logging.info(f"WATCHDOG: Ciclo completado. {count_offline} nodos pasaron a OFFLINE.")

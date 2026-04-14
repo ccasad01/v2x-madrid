@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from azure.iot.device import IoTHubDeviceClient
 
 CONNECTION_STRING = ""
+
 def create_client():
     client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
     return client
@@ -21,7 +22,7 @@ def get_backend_metrics():
         "performance": {
             "msg_processed_per_sec": random.randint(85, 115),
             "app_latency_ms": round(random.uniform(2.0, 10.0), 2),
-            "queue_fill_pct": 99.8
+            "queue_fill_pct": 20
         }
     }
 
