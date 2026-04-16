@@ -3,7 +3,9 @@ import time
 import json
 import random
 import psutil
-import argparse # Añadimos esto para manejar argumentos por terminal
+import argparse
+import subprocess
+import os # Añadimos os para verificar rutas de archivos
 from datetime import datetime, timezone
 from azure.iot.device import IoTHubDeviceClient
 
@@ -16,9 +18,55 @@ parser.add_argument('--lon', type=float, default=-3.7037, help='Longitud del nod
 args = parser.parse_args()
 
 def create_client():
-    # Usamos la cadena de conexión pasada por parámetro
     client = IoTHubDeviceClient.create_from_connection_string(args.conn)
     return client
+
+def get_real_temp():
+    """Lee la temperatura real del CPU desde /sys/class/thermal/"""
+    try:
+        # CPU temp
+        with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+            temp_raw = f.read().strip()
+        return round(float(temp_raw) / 1000.0, 1)
+    except:
+        # Fallback: Si no hay sensor accesible, simulamos una temperatura
+        return round(random.uniform(42.0, 48.0), 1)
+
+def get_real_ping():
+    """Métrica de red real: latencia compatible con inglés (time=) y español (tiempo=)"""
+    try:
+        # Ejecutamos el ping con timeout de 2 segundos
+        res = subprocess.check_output(["ping", "-c", "1", "-W", "2", "8.8.8.8"], 
+                                      stderr=subprocess.STDOUT, 
+                                      universal_newlines=True)
+        
+        # Lista de posibles etiquetas de tiempo según el idioma
+        labels = ["time=", "tiempo="]
+        
+        for label in labels:
+            if label in res:
+                # Extraemos lo que hay justo después de la etiqueta
+                # split(label)[1] nos da: "3.05 ms..."
+                # split()[0] nos da solo el número: "3.05"
+                latency_str = res.split(label)[1].split()[0]
+                
+                # En español, a veces el ping usa la coma como separador decimal (3,05)
+                # Lo normalizamos a punto para que Python pueda convertirlo a float
+                latency_str = latency_str.replace(',', '.')
+                
+                return float(latency_str)
+        
+        return 999.0
+    except Exception:
+        return 999.0
+
+def get_load_avg():
+    """Métrica de /proc real: carga media del sistema"""
+    try:
+        with open("/proc/loadavg", "r") as f:
+            return float(f.read().split()[0])
+    except:
+        return 0.0
 
 def get_backend_metrics():
     """Simula la salud de los procesos V2X internos"""
@@ -38,28 +86,35 @@ def send_telemetry(client):
     print(f"🚀 Iniciando agente RSU: {args.id}")
     try:
         while True:
-            # Datos observados del nodo reales+simulados
+            # Captura de datos reales del sistema Fedora
+            real_latency = get_real_ping()
+            load_1m = get_load_avg()
+            cpu_temp = get_real_temp()
+
             telemetry_data = {
-                "nodeId": args.id, # Usamos el ID pasado por parámetro
+                "nodeId": args.id,
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "version": "v2.2.0-cyber",
+                "location": {
+                    "type": "Point",
+                    "coordinates": [args.lon, args.lat]
+                },
                 "hardware": {
                     "cpuPct": psutil.cpu_percent(),
                     "memPct": psutil.virtual_memory().percent,
-                    "temp": round(random.uniform(45.0, 55.0), 1)
+                    "loadAvg": load_1m,
+                    "temp": cpu_temp # Ahora es temperatura real de /sys
                 },
                 "cyber_backend": get_backend_metrics(),
                 "network": {
-                    "v2xLatencyMs": round(random.uniform(5.0, 20.0), 2),
-                    "packetLoss": round(random.uniform(0.0, 0.1), 3)
+                    "v2xLatencyMs": real_latency,
+                    "packetLoss": 0.0 if real_latency < 200 else 0.1
                 }
             }
 
-            # Convertimos a JSON string
             message = json.dumps(telemetry_data)
             print(f"Enviando telemetría: {message}")
 
-            # Envío a Azure IoT Hub
             client.send_message(message)
             print(f"📡 Evento Ciber-Físico enviado: {args.id} - Status: OK")
             

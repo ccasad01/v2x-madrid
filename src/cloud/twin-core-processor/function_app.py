@@ -121,7 +121,7 @@ def iothub_processor(azeventhub: app.EventHubEvent,
     
     logging.info(f"Node: {node_id} | State: {previous_state} -> {new_state} | Event: {event}")
 
-# --- ENDPOINT PARA GRAFANA  ---
+# --- ENDPOINT PARA GRAFANA - current status ---
 @fb_app.route(route="get_rsu_status", auth_level=app.AuthLevel.ANONYMOUS)
 @fb_app.cosmos_db_input(arg_name="documents", 
                        database_name="v2x-database", 
@@ -151,6 +151,20 @@ def get_rsu_status(req: app.HttpRequest, documents: app.DocumentList) -> app.Htt
         mimetype="application/json",
         status_code=200
     )
+
+# --- ENDPOINT PARA GRAFANA - HISTORY (last 50 items)---
+
+@fb_app.route(route="get_history", auth_level=app.AuthLevel.ANONYMOUS)
+@fb_app.cosmos_db_input(arg_name="history", 
+                       database_name="v2x-database", 
+                       container_name="rsu-telemetry-history", 
+                       sql_query="SELECT TOP 50 * FROM c ORDER BY c._ts DESC",
+                       connection="CosmosDbConnectionString")
+def get_history(req: app.HttpRequest, history: app.DocumentList) -> app.HttpResponse:
+    # Esta función devuelve los últimos 50 mensajes enviados por todos los nodos
+    history_list = [doc.to_dict() for doc in history]
+    return app.HttpResponse(json.dumps(history_list), mimetype="application/json")
+
 
 # --- WATCHDOG: DETECTOR DE RSUS OFFLINE ---
 @fb_app.timer_trigger(schedule="0 */2 * * * *", arg_name="watchdogTimer", run_on_startup=False)
