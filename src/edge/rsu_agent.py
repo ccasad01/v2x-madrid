@@ -25,40 +25,39 @@ def get_real_temp():
     """Lee la temperatura real del CPU desde /sys/class/thermal/"""
     try:
         # CPU temp
-        with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+        with open("/sys/class/thermal/thermal_zone1/temp", "r") as f:
             temp_raw = f.read().strip()
         return round(float(temp_raw) / 1000.0, 1)
     except:
         # Fallback: Si no hay sensor accesible, simulamos una temperatura
         return round(random.uniform(42.0, 48.0), 1)
 
-def get_real_ping():
-    """Métrica de red real: latencia compatible con inglés (time=) y español (tiempo=)"""
+def get_network_metrics():
+    """Métrica de red real: ráfaga de 5 pings para obtener latencia y pérdida real"""
     try:
-        # Ejecutamos el ping con timeout de 2 segundos
-        res = subprocess.check_output(["ping", "-c", "1", "-W", "2", "8.8.8.8"], 
+        # -c 5: 5 paquetes, -i 0.2: intervalo rápido, -W 1: timeout 1s
+        res = subprocess.check_output(["ping", "-c", "5", "-i", "0.2", "-W", "1", "8.8.8.8"], 
                                       stderr=subprocess.STDOUT, 
                                       universal_newlines=True)
         
-        # Lista de posibles etiquetas de tiempo según el idioma
+        # 1. Extraer Latencia (Media)
         labels = ["time=", "tiempo="]
-        
+        latency = 999.0
         for label in labels:
             if label in res:
-                # Extraemos lo que hay justo después de la etiqueta
-                # split(label)[1] nos da: "3.05 ms..."
-                # split()[0] nos da solo el número: "3.05"
-                latency_str = res.split(label)[1].split()[0]
-                
-                # En español, a veces el ping usa la coma como separador decimal (3,05)
-                # Lo normalizamos a punto para que Python pueda convertirlo a float
-                latency_str = latency_str.replace(',', '.')
-                
-                return float(latency_str)
+                latency_str = res.split(label)[1].split()[0].replace(',', '.')
+                latency = float(latency_str)
+                break
         
-        return 999.0
+        # 2. Extraer Packet Loss Real
+        # Buscamos la línea que contiene '% packet loss'
+        loss_line = [l for l in res.split('\n') if 'packet loss' in l][0]
+        # Extraemos el número justo antes del '%'
+        loss_pct = float(loss_line.split('%')[0].split()[-1])
+        
+        return latency, loss_pct
     except Exception:
-        return 999.0
+        return 999.0, 100.0
 
 def get_load_avg():
     """Métrica de /proc real: carga media del sistema"""
@@ -83,11 +82,11 @@ def get_backend_metrics():
     }
 
 def send_telemetry(client):
-    print(f"🚀 Iniciando agente RSU: {args.id}")
+    print(f"//////*******Iniciando agente RSU: {args.id}*******//////")
     try:
         while True:
             # Captura de datos reales del sistema Fedora
-            real_latency = get_real_ping()
+            real_latency, real_loss = get_network_metrics()
             load_1m = get_load_avg()
             cpu_temp = get_real_temp()
 
@@ -108,20 +107,20 @@ def send_telemetry(client):
                 "cyber_backend": get_backend_metrics(),
                 "network": {
                     "v2xLatencyMs": real_latency,
-                    "packetLoss": 0.0 if real_latency < 200 else 0.1
+                    "packetLoss": real_loss
                 }
             }
 
             message = json.dumps(telemetry_data)
-            print(f"Enviando telemetría: {message}")
+            print(f"//////*******Enviando telemetría: {message}*******//////")
 
             client.send_message(message)
-            print(f"📡 Evento Ciber-Físico enviado: {args.id} - Status: OK")
+            print(f"//////*******Evento Ciber-Físico enviado: {args.id} - Status: OK*******//////")
             
-            time.sleep(10) 
+            time.sleep(7)  # 7s +1.5s aprox ping
             
     except KeyboardInterrupt:
-        print(f"\n🛑 Agente {args.id} detenido.")
+        print(f"\n//////*******Agente {args.id} detenido.*******//////")
     finally:
         client.shutdown()
 
