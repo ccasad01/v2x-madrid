@@ -25,7 +25,7 @@ jobs:
         run: pip install -r src/cloud/twin-core-processor/requirements.txt pytest bandit
 
       - name: 4. SAST - (Static Application Security Testing) with bandit linter
-        run: bandit -r ./src 
+        run: bandit -ll -r ./src 
 
       - name: 5. Ejecutar Tests
         run: pytest tests/
