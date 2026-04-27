@@ -1,4 +1,4 @@
-# tests/test_basico.py
+# tests/test_basic.py
 
 def basic_initial_test():
     """Un test de ejemplo para asegurar que el pipeline funciona."""
