@@ -1,9 +1,7 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-# More info on Python, GitHub Actions, and Azure Functions: https://aka.ms/python-webapps-actions
-
+# CI/CD DevSecOps Pipeline using OIDC Authentication
 name: Build and deploy Python project to Azure Function App - brain-v2x-madrid
 
+# Only activates when a push to the main branch is done
 on:
   push:
     branches:
@@ -11,14 +9,17 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
-  PYTHON_VERSION: '3.11' # set this to the python version to use (supports 3.6, 3.7, 3.8)
+  # Keep the deployment path at root, because we will compress ONLY the target folder later
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' 
+  # Match with Azure runtime version (3.11), even if local native Fedora uses 3.14
+  PYTHON_VERSION: '3.11' 
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  # 1: Q&A (Quality and Assurance)
+  build-and-test:
+    runs-on: ubuntu-latest # GitHub provides an ubuntu machine
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -29,33 +30,35 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        # Install requirements.txt and testing tools
+        run: pip install -r src/cloud/twin-core-processor/requirements.txt pytest bandit
 
-      # Optional: Add step to run tests here
+      - name: SAST - Static Application Security Testing (Bandit)
+        run: bandit -ll -r ./src 
+
+      - name: Run Pytest
+        run: pytest tests/
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        # Enter the exact folder and compress only the backend to send it clean to Azure
+        run: |
+          cd src/cloud/twin-core-processor
+          zip -r ../../../release.zip ./*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: python-app
-          path: |
-            release.zip
-            !venv/
+          path: release.zip
 
-  deploy:
+  # 2: Azure transport
+  deploy-to-azure:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-and-test # Wait until build-and-test finishes with success
     permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      id-token: write # CRUCIAL FOR OIDC! (Zero Trust)
+      contents: read 
 
     steps:
       - name: Download artifact from build job
@@ -68,7 +71,7 @@ jobs:
           unzip release.zip
           rm release.zip
         
-      - name: Login to Azure
+      - name: Login to Azure (OIDC)
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8FFF811778FD418F903C76C41B5D4091 }}
@@ -82,4 +85,3 @@ jobs:
           app-name: 'brain-v2x-madrid'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          
