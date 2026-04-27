@@ -22,7 +22,7 @@ jobs:
 
       - name: 3. Instalar dependencias (Librerías, Bandit y Pytest)
         # install requirements.txt and testing tools
-        run: pip install -r requirements.txt pytest bandit
+        run: pip install -r src/cloud/twin-core-processor/requirements.txt pytest bandit
 
       - name: 4. SAST - (Static Application Security Testing) with bandit linter
         run: bandit -r ./src 
