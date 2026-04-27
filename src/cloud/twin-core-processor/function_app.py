@@ -197,11 +197,21 @@ def toggle_simulation(req: app.HttpRequest, currentModel: app.DocumentList, twin
         sim_state['active'] = new_active
         
         if new_active:
-            # Al ACTIVAR: Podemos dejar los valores como están o inicializar
+            # 1. Copiamos los valores de la última observación real al estado de simulación
+            last_obs = twin.get('last_observation', {})
+            
+            # Mantenemos las categorías clave: hardware, network, cyber_backend
+            for category in ['hardware', 'network', 'cyber_backend']:
+                if category in last_obs:
+                    sim_state[category] = copy.deepcopy(last_obs[category])
+            
+            # 2. Evaluamos el estado basado en estos datos "heredados" de la realidad
             event, reasons = analyze_discrepancies(sim_state, twin.get('expected_behavior', {}))
+            
+            # 3. El estado inicial simulado será una continuación del estado real actual
             sim_state['sim_status'] = get_next_state(twin.get('currentState', 'INIT'), event)
             sim_state['reasons_sim'] = reasons
-            message = "Sandbox Activado"
+            message = "Sandbox Activado: Sincronizado con estado real"
         else:
             # Al DESACTIVAR: Limpiamos estados para que no se quede en rojo
             sim_state['sim_status'] = "OFF"

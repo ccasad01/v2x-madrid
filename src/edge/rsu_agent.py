@@ -77,7 +77,7 @@ def get_backend_metrics():
         "performance": {
             "msg_processed_per_sec": random.randint(85, 115),
             "app_latency_ms": round(random.uniform(2.0, 10.0), 2),
-            "queue_fill_pct": 20
+            "queue_fill_pct": 75
         }
     }
 
