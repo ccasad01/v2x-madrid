@@ -78,6 +78,14 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F339424526CB4BF497CB2A0A0F4C6854 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_7FC6533AB0D64262BE68F0A2374B4A79 }}
 
+      - name: Install Cosmos DB dependencies
+        run: pip install azure-cosmos
+
+      - name: Set System Status to MAINTENANCE
+        env:
+          COSMOS_CONNECTION_STRING: ${{ secrets.COSMOS_CONNECTION_STRING }}
+        run: python scripts/deploy_notifier.py --status MAINTENANCE
+
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
         id: deploy-to-function
@@ -85,3 +93,12 @@ jobs:
           app-name: 'brain-v2x-madrid'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          
+      # github.sha para sacar el hash del commit como versión
+      - name: Set System Status to OPERATIONAL
+        if: success()
+        env:
+          COSMOS_CONNECTION_STRING: ${{ secrets.COSMOS_CONNECTION_STRING }}
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          python scripts/deploy_notifier.py --status OPERATIONAL --version "v-$SHORT_SHA" 

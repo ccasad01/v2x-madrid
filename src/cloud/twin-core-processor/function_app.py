@@ -337,6 +337,25 @@ def update_twin_config(req: app.HttpRequest, currentModel: app.DocumentList, twi
             
     except Exception as e:
         return app.HttpResponse(f"Error procesando update: {str(e)}", status_code=500)
+    
+# --- ENDPOINT PARA GRAFANA - Historial de Mantenimiento ---
+@fb_app.route(route="get_system_events", auth_level=app.AuthLevel.ANONYMOUS)
+@fb_app.cosmos_db_input(arg_name="metadata", 
+                       database_name="v2x-database", 
+                       container_name="rsu-twin-models", 
+                       sql_query="SELECT c.events FROM c WHERE c.id = 'system_metadata'",
+                       connection="CosmosDbConnectionString")
+def get_system_events(req: app.HttpRequest, metadata: app.DocumentList) -> app.HttpResponse:
+    if not metadata:
+        return app.HttpResponse("[]", mimetype="application/json")
+    
+    event_list = metadata[0].get("events", [])
+    
+    return app.HttpResponse(
+        body=json.dumps(event_list),
+        mimetype="application/json",
+        status_code=200
+    )
 
 # --- WATCHDOG: DETECTOR DE RSUS OFFLINE ---
 @fb_app.timer_trigger(schedule="0 */2 * * * *", arg_name="watchdogTimer", run_on_startup=False)
