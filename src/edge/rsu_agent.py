@@ -77,7 +77,7 @@ def get_backend_metrics():
         "performance": {
             "msg_processed_per_sec": random.randint(85, 115),
             "app_latency_ms": round(random.uniform(2.0, 10.0), 2),
-            "queue_fill_pct": 75
+            "queue_fill_pct": random.randint(15, 80)
         }
     }
 
@@ -93,7 +93,7 @@ def send_telemetry(client):
             telemetry_data = {
                 "nodeId": args.id,
                 "timestamp": datetime.now(timezone.utc).isoformat(),
-                "version": "v2.2.0-cyber",
+                "version": "v1.0.0",
                 "location": {
                     "type": "Point",
                     "coordinates": [args.lon, args.lat]
@@ -117,7 +117,7 @@ def send_telemetry(client):
             client.send_message(message)
             print(f"//////*******Evento Ciber-Físico enviado: {args.id} - Status: OK*******//////")
             
-            time.sleep(7)  # 7s +1.5s aprox ping
+            time.sleep(19)  # 7s +1.5s aprox ping
             
     except KeyboardInterrupt:
         print(f"\n//////*******Agente {args.id} detenido.*******//////")

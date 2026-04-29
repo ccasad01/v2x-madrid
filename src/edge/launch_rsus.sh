@@ -1,10 +1,8 @@
 #!/bin/bash
 
 # --- CONFIGURACIÓN ---
-# Define aquí tus nodos: "ID;ConnectionString;Lat;Lon"
+# "ID/ConnectionString/Lat/Lon"
 NODES=(
-    "RSU-Madrid-01/HostName=hub-v2x-madrid.azure-devices.net;DeviceId=RSU-Madrid-01;SharedAccessKey=olvyQT6KgpfaTLENrvl0DNUintIup9umyQIm2DuxCvA=/40.4167/-3.7037"
-    "RSU-Madrid-02/HostName=hub-v2x-madrid.azure-devices.net;DeviceId=RSU-Madrid-02;SharedAccessKey=drPeQ0OyWemAT4j25CCI4iqOdbeZCs8LS+BXXbmmIlA=/40.4180/-3.6900"
 )
 
 # Array para guardar los PIDs de los procesos hijos

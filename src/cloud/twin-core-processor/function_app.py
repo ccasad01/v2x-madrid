@@ -128,7 +128,7 @@ def iothub_processor(azeventhub: app.EventHubEvent,
 @fb_app.cosmos_db_input(arg_name="documents", 
                        database_name="v2x-database", 
                        container_name="rsu-twin-models", 
-                       sql_query="SELECT * FROM c", # Traemos todas las RSUs
+                       sql_query="SELECT * FROM c WHERE c.type = 'RoadSideUnit'", # Traemos todas las RSUs excluyendo system_metadata
                        connection="CosmosDbConnectionString")
 def get_rsu_status(req: app.HttpRequest, documents: app.DocumentList) -> app.HttpResponse:
     logging.info("API: Grafana solicitando estado de los Gemelos.")
@@ -160,7 +160,7 @@ def get_rsu_status(req: app.HttpRequest, documents: app.DocumentList) -> app.Htt
 @fb_app.cosmos_db_input(arg_name="history", 
                        database_name="v2x-database", 
                        container_name="rsu-telemetry-history", 
-                       sql_query="SELECT TOP 50 * FROM c ORDER BY c._ts DESC",
+                       sql_query="SELECT TOP 200 * FROM c ORDER BY c._ts DESC",
                        connection="CosmosDbConnectionString")
 def get_history(req: app.HttpRequest, history: app.DocumentList) -> app.HttpResponse:
     # Esta función devuelve los últimos 50 mensajes enviados por todos los nodos
@@ -358,7 +358,7 @@ def get_system_events(req: app.HttpRequest, metadata: app.DocumentList) -> app.H
     )
 
 # --- WATCHDOG: DETECTOR DE RSUS OFFLINE ---
-@fb_app.timer_trigger(schedule="0 */2 * * * *", arg_name="watchdogTimer", run_on_startup=False)
+@fb_app.timer_trigger(schedule="0 */5 * * * *", arg_name="watchdogTimer", run_on_startup=False)
 @fb_app.cosmos_db_input(arg_name="allRSUs", 
                        database_name="v2x-database", 
                        container_name="rsu-twin-models", 
