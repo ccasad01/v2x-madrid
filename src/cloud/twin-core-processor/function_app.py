@@ -362,7 +362,7 @@ def get_system_events(req: app.HttpRequest, metadata: app.DocumentList) -> app.H
 @fb_app.cosmos_db_input(arg_name="allRSUs", 
                        database_name="v2x-database", 
                        container_name="rsu-twin-models", 
-                       sql_query="SELECT * FROM c WHERE c.currentState != 'OFFLINE'", # Solo miramos las que "estaban" vivas
+                       sql_query="SELECT * FROM c WHERE c.type = 'RoadSideUnit' AND c.currentState != 'OFFLINE'",
                        connection="CosmosDbConnectionString")
 @fb_app.cosmos_db_output(arg_name="updateOutput", 
                         database_name="v2x-database", 

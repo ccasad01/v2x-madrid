@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # --- CONFIGURACIÓN ---
-# "ID/ConnectionString/Lat/Lon"
+# "ID|ConnectionString|Lat|Lon"
 NODES=(
 )
 
@@ -24,7 +24,7 @@ echo "Iniciando despliegue de flota RSU..."
 
 for node in "${NODES[@]}"; do
     # Separar los valores usando el punto y coma como delimitador
-    IFS="/" read -r ID CONN LAT LON <<< "$node"
+    IFS="|" read -r ID CONN LAT LON <<< "$node"
     
     echo "Lanzando nodo: $ID"
     
