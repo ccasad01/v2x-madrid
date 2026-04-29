@@ -1,0 +1,2469 @@
+{
+  "apiVersion": "dashboard.grafana.app/v2",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "ca7c8vg",
+    "namespace": "stacks-1593747",
+    "uid": "f2b30fe2-3f20-4ff7-a25a-34ddd8795db0",
+    "resourceVersion": "2047658540474040833",
+    "generation": 96,
+    "creationTimestamp": "2026-04-20T17:30:18Z",
+    "labels": {
+      "grafana.app/deprecatedInternalID": "1646080646569984"
+    },
+    "annotations": {
+      "grafana.app/createdBy": "user:dfiyrlttt5vk0e",
+      "grafana.app/folder": "",
+      "grafana.app/saved-from-ui": "Grafana Cloud",
+      "grafana.app/updatedBy": "user:dfiyrlttt5vk0e",
+      "grafana.app/updatedTimestamp": "2026-04-24T12:46:54Z"
+    }
+  },
+  "spec": {
+    "annotations": [
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "query": {
+            "kind": "DataQuery",
+            "group": "grafana",
+            "version": "v0",
+            "datasource": {
+              "name": "-- Grafana --"
+            },
+            "spec": {}
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "builtIn": true
+        }
+      }
+    ],
+    "cursorSync": "Off",
+    "editable": true,
+    "elements": {
+      "panel-10": {
+        "kind": "Panel",
+        "spec": {
+          "id": 10,
+          "title": "",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "",
+                      "version": "v0",
+                      "spec": {}
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "volkovlabs-form-panel",
+            "version": "6.3.2",
+            "spec": {
+              "options": {
+                "buttonGroup": {
+                  "orientation": "center",
+                  "size": "md"
+                },
+                "confirmModal": {
+                  "body": "Please confirm to update changed values",
+                  "cancel": "Cancel",
+                  "columns": {
+                    "include": [
+                      "name",
+                      "oldValue",
+                      "newValue"
+                    ],
+                    "name": "Label",
+                    "newValue": "New Value",
+                    "oldValue": "Old Value"
+                  },
+                  "confirm": "Confirm",
+                  "elementDisplayMode": "modified",
+                  "title": "Confirm update request"
+                },
+                "elementValueChanged": "",
+                "elements": [
+                  {
+                    "id": "memPct",
+                    "labelWidth": 19,
+                    "max": 100,
+                    "min": 0,
+                    "section": "",
+                    "step": 1,
+                    "title": "Mem. % Sim.",
+                    "tooltip": "",
+                    "type": "slider",
+                    "uid": "523bf56a-4c7b-4aae-9b6d-bc350e32e3d7",
+                    "unit": "",
+                    "value": 0
+                  }
+                ],
+                "initial": {
+                  "code": "console.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log(dataQuery);",
+                  "contentType": "application/json",
+                  "getPayload": "return {}",
+                  "highlight": false,
+                  "highlightColor": "red",
+                  "method": "-",
+                  "payload": {}
+                },
+                "layout": {
+                  "orientation": "horizontal",
+                  "padding": 10,
+                  "sectionVariant": "default",
+                  "variant": "single"
+                },
+                "reset": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "process",
+                  "text": "Reset",
+                  "variant": "hidden"
+                },
+                "resetAction": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "getPayload": "return {}",
+                  "mode": "initial",
+                  "payload": {}
+                },
+                "saveDefault": {
+                  "icon": "save",
+                  "text": "Save Default",
+                  "variant": "hidden"
+                },
+                "submit": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "cloud-upload",
+                  "text": "Simulate Value",
+                  "variant": "primary"
+                },
+                "sync": false,
+                "update": {
+                  "code": "if (context.panel.response && context.panel.response.ok) {\n  context.grafana.notifySuccess(['Simulación', 'Enviada correctamente']);\n  context.grafana.refresh(); \n} else {\n  context.grafana.notifyError(['Error', 'La simulación no pudo procesarse']);\n}",
+                  "confirm": false,
+                  "contentType": "application/json",
+                  "getPayload": "const payload = {\n  nodeId: \"${nodeId}\",\n  category: \"hardware\", // La categoría padre en tu JSON\n  field: \"memPct\",        // El campo exacto a simular\n  value: context.panel.elements.find(e => e.id === 'memPct').value // El ID de tu slider\n};\n\nreturn payload;",
+                  "header": [],
+                  "method": "POST",
+                  "payload": {},
+                  "payloadMode": "custom",
+                  "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/simulate_step"
+                },
+                "updateEnabled": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-11": {
+        "kind": "Panel",
+        "spec": {
+          "id": 11,
+          "title": "",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "",
+                      "version": "v0",
+                      "spec": {}
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "volkovlabs-form-panel",
+            "version": "6.3.2",
+            "spec": {
+              "options": {
+                "buttonGroup": {
+                  "orientation": "center",
+                  "size": "md"
+                },
+                "confirmModal": {
+                  "body": "Please confirm to update changed values",
+                  "cancel": "Cancel",
+                  "columns": {
+                    "include": [
+                      "name",
+                      "oldValue",
+                      "newValue"
+                    ],
+                    "name": "Label",
+                    "newValue": "New Value",
+                    "oldValue": "Old Value"
+                  },
+                  "confirm": "Confirm",
+                  "elementDisplayMode": "modified",
+                  "title": "Confirm update request"
+                },
+                "elementValueChanged": "",
+                "elements": [
+                  {
+                    "id": "loadAvg",
+                    "labelWidth": 19,
+                    "section": "",
+                    "title": "Carga media",
+                    "tooltip": "",
+                    "type": "number",
+                    "uid": "523bf56a-4c7b-4aae-9b6d-bc350e32e3d7",
+                    "unit": "",
+                    "value": 0
+                  }
+                ],
+                "initial": {
+                  "code": "console.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log(dataQuery);",
+                  "contentType": "application/json",
+                  "getPayload": "return {}",
+                  "highlight": false,
+                  "highlightColor": "red",
+                  "method": "-",
+                  "payload": {}
+                },
+                "layout": {
+                  "orientation": "horizontal",
+                  "padding": 10,
+                  "sectionVariant": "default",
+                  "variant": "single"
+                },
+                "reset": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "process",
+                  "text": "Reset",
+                  "variant": "hidden"
+                },
+                "resetAction": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "getPayload": "return {}",
+                  "mode": "initial",
+                  "payload": {}
+                },
+                "saveDefault": {
+                  "icon": "save",
+                  "text": "Save Default",
+                  "variant": "hidden"
+                },
+                "submit": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "cloud-upload",
+                  "text": "Simulate Value",
+                  "variant": "primary"
+                },
+                "sync": false,
+                "update": {
+                  "code": "if (context.panel.response && context.panel.response.ok) {\n  context.grafana.notifySuccess(['Simulación', 'Enviada correctamente']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Error', 'La simulación no pudo procesarse']);\n}",
+                  "confirm": false,
+                  "contentType": "application/json",
+                  "getPayload": "const payload = {\n  nodeId: \"${nodeId}\",\n  category: \"hardware\", // La categoría padre en tu JSON\n  field: \"loadAvg\",        // El campo exacto a simular\n  value: context.panel.elements.find(e => e.id === 'loadAvg').value // El ID de tu slider\n};\n\nreturn payload;",
+                  "header": [],
+                  "method": "POST",
+                  "payload": {},
+                  "payloadMode": "custom",
+                  "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/simulate_step"
+                },
+                "updateEnabled": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-12": {
+        "kind": "Panel",
+        "spec": {
+          "id": 12,
+          "title": "",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "",
+                      "version": "v0",
+                      "spec": {}
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "volkovlabs-form-panel",
+            "version": "6.3.2",
+            "spec": {
+              "options": {
+                "buttonGroup": {
+                  "orientation": "center",
+                  "size": "md"
+                },
+                "confirmModal": {
+                  "body": "Please confirm to update changed values",
+                  "cancel": "Cancel",
+                  "columns": {
+                    "include": [
+                      "name",
+                      "oldValue",
+                      "newValue"
+                    ],
+                    "name": "Label",
+                    "newValue": "New Value",
+                    "oldValue": "Old Value"
+                  },
+                  "confirm": "Confirm",
+                  "elementDisplayMode": "modified",
+                  "title": "Confirm update request"
+                },
+                "elementValueChanged": "",
+                "elements": [
+                  {
+                    "id": "cpuPct",
+                    "labelWidth": 19,
+                    "max": 100,
+                    "min": 0,
+                    "section": "",
+                    "step": 1,
+                    "title": "CPU % Sim",
+                    "tooltip": "",
+                    "type": "slider",
+                    "uid": "523bf56a-4c7b-4aae-9b6d-bc350e32e3d7",
+                    "unit": "",
+                    "value": 0
+                  }
+                ],
+                "initial": {
+                  "code": "console.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log(dataQuery);",
+                  "contentType": "application/json",
+                  "getPayload": "return {}",
+                  "highlight": false,
+                  "highlightColor": "red",
+                  "method": "-",
+                  "payload": {}
+                },
+                "layout": {
+                  "orientation": "horizontal",
+                  "padding": 10,
+                  "sectionVariant": "default",
+                  "variant": "single"
+                },
+                "reset": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "process",
+                  "text": "Reset",
+                  "variant": "hidden"
+                },
+                "resetAction": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "getPayload": "return {}",
+                  "mode": "initial",
+                  "payload": {}
+                },
+                "saveDefault": {
+                  "icon": "save",
+                  "text": "Save Default",
+                  "variant": "hidden"
+                },
+                "submit": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "cloud-upload",
+                  "text": "Simulate Value",
+                  "variant": "primary"
+                },
+                "sync": false,
+                "update": {
+                  "code": "if (context.panel.response && context.panel.response.ok) {\n  context.grafana.notifySuccess(['Simulación', 'Enviada correctamente']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Error', 'La simulación no pudo procesarse. Compruebe si está iniciado el modo simulado']);\n}",
+                  "confirm": false,
+                  "contentType": "application/json",
+                  "getPayload": "const payload = {\n  nodeId: \"${nodeId}\",\n  category: \"hardware\", // La categoría padre en tu JSON\n  field: \"cpuPct\",        // El campo exacto a simular\n  value: context.panel.elements.find(e => e.id === 'cpuPct').value // El ID del slider\n};\n\nreturn payload;",
+                  "header": [],
+                  "method": "POST",
+                  "payload": {},
+                  "payloadMode": "custom",
+                  "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/simulate_step"
+                },
+                "updateEnabled": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-13": {
+        "kind": "Panel",
+        "spec": {
+          "id": 13,
+          "title": "",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "",
+                      "version": "v0",
+                      "spec": {}
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "volkovlabs-form-panel",
+            "version": "6.3.2",
+            "spec": {
+              "options": {
+                "buttonGroup": {
+                  "orientation": "center",
+                  "size": "md"
+                },
+                "confirmModal": {
+                  "body": "Please confirm to update changed values",
+                  "cancel": "Cancel",
+                  "columns": {
+                    "include": [
+                      "name",
+                      "oldValue",
+                      "newValue"
+                    ],
+                    "name": "Label",
+                    "newValue": "New Value",
+                    "oldValue": "Old Value"
+                  },
+                  "confirm": "Confirm",
+                  "elementDisplayMode": "modified",
+                  "title": "Confirm update request"
+                },
+                "elementValueChanged": "",
+                "elements": [
+                  {
+                    "background": "",
+                    "backgroundColor": "#2e9e44",
+                    "buttonLabel": "SIMULATED MODE",
+                    "customCode": "(async () => {\n\n  const params = new URLSearchParams(window.location.search);\n  const nodeId = params.get('var-nodeId') ?? '';\n\n  try {\n    const resp = await fetch(\n      'https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/toggle_simulation',\n      {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify({ nodeId })\n      }\n    );\n    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);\n\n    const isActive = params.get('var-VAR_ACTIVE') === 'true';\n    const newActive = !isActive;\n\n    context.panel.onChangeElements(\n      context.panel.elements.map(el =>\n        el.id === 'var_active_toggle'\n          ? { ...el, buttonLabel: 'SIMULATED MODE', backgroundColor: newActive ? '#2e9e44' : '#1a5c2a', foregroundColor: '#ffffff' }\n          : el\n      )\n    );\n    context.grafana.locationService.partial({ 'var-VAR_ACTIVE': String(newActive) });\n    context.grafana.notifySuccess(['MODO SIMULADO', newActive ? 'Activado' : 'Desactivado']);\n  } catch (e) {\n    console.error('[TOGGLE] ERROR:', e);\n    context.grafana.notifyError(['Error POST', e.message]);\n  }\n})();",
+                    "foregroundColor": "#ffffff",
+                    "id": "var_active_toggle",
+                    "section": "",
+                    "show": "form",
+                    "size": "md",
+                    "title": "",
+                    "tooltip": "",
+                    "type": "button",
+                    "uid": "c1d2e3f4-a5b6-7890-cdef-123456789abc",
+                    "unit": "",
+                    "value": "",
+                    "variant": "custom"
+                  }
+                ],
+                "initial": {
+                  "code": "const params = new URLSearchParams(window.location.search);\nconst isActive = params.get('var-VAR_ACTIVE') === 'true';\n\ncontext.panel.onChangeElements(\n  context.panel.elements.map(el =>\n    el.id === 'var_active_toggle'\n      ? { ...el, buttonLabel: isActive ? 'SIMULATED MODE ACTIVATED' : 'SIMULATED MODE NOT ACTIVATED', backgroundColor: isActive ? '#2e9e44' : '#1a5c2a', foregroundColor: '#ffffff' }\n      : el\n  )\n);",
+                  "contentType": "application/json",
+                  "getPayload": "return {}",
+                  "highlight": false,
+                  "highlightColor": "red",
+                  "method": "-",
+                  "payload": {}
+                },
+                "layout": {
+                  "orientation": "horizontal",
+                  "padding": 10,
+                  "sectionVariant": "default",
+                  "variant": "single"
+                },
+                "reset": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "process",
+                  "text": "Reset",
+                  "variant": "hidden"
+                },
+                "resetAction": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "getPayload": "return {}",
+                  "mode": "initial",
+                  "payload": {}
+                },
+                "saveDefault": {
+                  "icon": "save",
+                  "text": "Save Default",
+                  "variant": "hidden"
+                },
+                "submit": {
+                  "backgroundColor": "transparent",
+                  "foregroundColor": "transparent",
+                  "icon": "eye-slash",
+                  "text": "",
+                  "variant": "custom"
+                },
+                "sync": true,
+                "update": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "contentType": "application/json",
+                  "getPayload": "const payload = {};\ncontext.panel.elements.forEach((element) => {\n  if (!element.value) {\n    return;\n  }\n  payload[element.id] = element.value;\n})\nreturn payload;",
+                  "method": "-",
+                  "payload": {},
+                  "payloadMode": "all"
+                },
+                "updateEnabled": "manual"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          },
+          "transparent": true
+        }
+      },
+      "panel-15": {
+        "kind": "Panel",
+        "spec": {
+          "id": 15,
+          "title": "",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "",
+                      "version": "v0",
+                      "spec": {}
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "volkovlabs-form-panel",
+            "version": "6.3.2",
+            "spec": {
+              "options": {
+                "buttonGroup": {
+                  "orientation": "center",
+                  "size": "md"
+                },
+                "confirmModal": {
+                  "body": "Please confirm to update changed values",
+                  "cancel": "Cancel",
+                  "columns": {
+                    "include": [
+                      "name",
+                      "oldValue",
+                      "newValue"
+                    ],
+                    "name": "Label",
+                    "newValue": "New Value",
+                    "oldValue": "Old Value"
+                  },
+                  "confirm": "Confirm",
+                  "elementDisplayMode": "modified",
+                  "title": "Confirm update request"
+                },
+                "elementValueChanged": "",
+                "elements": [
+                  {
+                    "id": "msg_processed_per_sec",
+                    "labelWidth": 19,
+                    "max": 180,
+                    "min": 0,
+                    "section": "",
+                    "step": 1,
+                    "title": "Msg. per sec.",
+                    "tooltip": "",
+                    "type": "slider",
+                    "uid": "523bf56a-4c7b-4aae-9b6d-bc350e32e3d7",
+                    "unit": "",
+                    "value": 0
+                  }
+                ],
+                "initial": {
+                  "code": "console.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log(dataQuery);",
+                  "contentType": "application/json",
+                  "getPayload": "return {}",
+                  "highlight": false,
+                  "highlightColor": "red",
+                  "method": "-",
+                  "payload": {}
+                },
+                "layout": {
+                  "orientation": "horizontal",
+                  "padding": 10,
+                  "sectionVariant": "default",
+                  "variant": "single"
+                },
+                "reset": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "process",
+                  "text": "Reset",
+                  "variant": "hidden"
+                },
+                "resetAction": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "getPayload": "return {}",
+                  "mode": "initial",
+                  "payload": {}
+                },
+                "saveDefault": {
+                  "icon": "save",
+                  "text": "Save Default",
+                  "variant": "hidden"
+                },
+                "submit": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "cloud-upload",
+                  "text": "Simulate Value",
+                  "variant": "primary"
+                },
+                "sync": false,
+                "update": {
+                  "code": "if (context.panel.response && context.panel.response.ok) {\n  context.grafana.notifySuccess(['Simulación', 'Enviada correctamente']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Error', 'La simulación no pudo procesarse']);\n}",
+                  "confirm": false,
+                  "contentType": "application/json",
+                  "getPayload": "const payload = {\n  nodeId: \"${nodeId}\",\n  category: \"cyber_backend\", // La categoría padre en tu JSON\n  field: \"performance.msg_processed_per_sec\",        // El campo exacto a simular\n  value: context.panel.elements.find(e => e.id === 'msg_processed_per_sec').value // El ID de tu slider\n};\n\nreturn payload;",
+                  "header": [],
+                  "method": "POST",
+                  "payload": {},
+                  "payloadMode": "custom",
+                  "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/simulate_step"
+                },
+                "updateEnabled": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-16": {
+        "kind": "Panel",
+        "spec": {
+          "id": 16,
+          "title": "",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "",
+                      "version": "v0",
+                      "spec": {}
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "volkovlabs-form-panel",
+            "version": "6.3.2",
+            "spec": {
+              "options": {
+                "buttonGroup": {
+                  "orientation": "center",
+                  "size": "md"
+                },
+                "confirmModal": {
+                  "body": "Please confirm to update changed values",
+                  "cancel": "Cancel",
+                  "columns": {
+                    "include": [
+                      "name",
+                      "oldValue",
+                      "newValue"
+                    ],
+                    "name": "Label",
+                    "newValue": "New Value",
+                    "oldValue": "Old Value"
+                  },
+                  "confirm": "Confirm",
+                  "elementDisplayMode": "modified",
+                  "title": "Confirm update request"
+                },
+                "elementValueChanged": "",
+                "elements": [
+                  {
+                    "id": "queue_fill_pct",
+                    "labelWidth": 19,
+                    "max": 100,
+                    "min": 0,
+                    "section": "",
+                    "step": 1,
+                    "title": "msg. queue (%)",
+                    "tooltip": "",
+                    "type": "slider",
+                    "uid": "523bf56a-4c7b-4aae-9b6d-bc350e32e3d7",
+                    "unit": "",
+                    "value": 0
+                  }
+                ],
+                "initial": {
+                  "code": "console.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log(dataQuery);",
+                  "contentType": "application/json",
+                  "getPayload": "return {}",
+                  "highlight": false,
+                  "highlightColor": "red",
+                  "method": "-",
+                  "payload": {}
+                },
+                "layout": {
+                  "orientation": "horizontal",
+                  "padding": 10,
+                  "sectionVariant": "default",
+                  "variant": "single"
+                },
+                "reset": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "process",
+                  "text": "Reset",
+                  "variant": "hidden"
+                },
+                "resetAction": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "getPayload": "return {}",
+                  "mode": "initial",
+                  "payload": {}
+                },
+                "saveDefault": {
+                  "icon": "save",
+                  "text": "Save Default",
+                  "variant": "hidden"
+                },
+                "submit": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "cloud-upload",
+                  "text": "Simulate Value",
+                  "variant": "primary"
+                },
+                "sync": false,
+                "update": {
+                  "code": "if (context.panel.response && context.panel.response.ok) {\n  context.grafana.notifySuccess(['Simulación', 'Enviada correctamente']);\n  context.grafana.refresh(); \n} else {\n  context.grafana.notifyError(['Error', 'La simulación no pudo procesarse']);\n}",
+                  "confirm": false,
+                  "contentType": "application/json",
+                  "getPayload": "const payload = {\n  nodeId: \"${nodeId}\",\n  category: \"cyber_backend\", // La categoría padre en tu JSON\n  field: \"performance.queue_fill_pct\",        // El campo exacto a simular\n  value: context.panel.elements.find(e => e.id === 'queue_fill_pct').value // El ID de tu slider\n};\n\nreturn payload;",
+                  "header": [],
+                  "method": "POST",
+                  "payload": {},
+                  "payloadMode": "custom",
+                  "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/simulate_step"
+                },
+                "updateEnabled": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-17": {
+        "kind": "Panel",
+        "spec": {
+          "id": 17,
+          "title": "",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "",
+                      "version": "v0",
+                      "spec": {}
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "volkovlabs-form-panel",
+            "version": "6.3.2",
+            "spec": {
+              "options": {
+                "buttonGroup": {
+                  "orientation": "center",
+                  "size": "md"
+                },
+                "confirmModal": {
+                  "body": "Please confirm to update changed values",
+                  "cancel": "Cancel",
+                  "columns": {
+                    "include": [
+                      "name",
+                      "oldValue",
+                      "newValue"
+                    ],
+                    "name": "Label",
+                    "newValue": "New Value",
+                    "oldValue": "Old Value"
+                  },
+                  "confirm": "Confirm",
+                  "elementDisplayMode": "modified",
+                  "title": "Confirm update request"
+                },
+                "elementValueChanged": "",
+                "elements": [
+                  {
+                    "id": "v2xLatencyMs",
+                    "labelWidth": 19,
+                    "max": 500,
+                    "min": 0,
+                    "section": "",
+                    "step": 10,
+                    "title": "V2X Latency",
+                    "tooltip": "",
+                    "type": "slider",
+                    "uid": "523bf56a-4c7b-4aae-9b6d-bc350e32e3d7",
+                    "unit": "",
+                    "value": 0
+                  }
+                ],
+                "initial": {
+                  "code": "console.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log(dataQuery);",
+                  "contentType": "application/json",
+                  "getPayload": "return {}",
+                  "highlight": false,
+                  "highlightColor": "red",
+                  "method": "-",
+                  "payload": {}
+                },
+                "layout": {
+                  "orientation": "horizontal",
+                  "padding": 10,
+                  "sectionVariant": "default",
+                  "variant": "single"
+                },
+                "reset": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "process",
+                  "text": "Reset",
+                  "variant": "hidden"
+                },
+                "resetAction": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "getPayload": "return {}",
+                  "mode": "initial",
+                  "payload": {}
+                },
+                "saveDefault": {
+                  "icon": "save",
+                  "text": "Save Default",
+                  "variant": "hidden"
+                },
+                "submit": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "cloud-upload",
+                  "text": "Simulate Value",
+                  "variant": "primary"
+                },
+                "sync": false,
+                "update": {
+                  "code": "if (context.panel.response && context.panel.response.ok) {\n  context.grafana.notifySuccess(['Simulación', 'Enviada correctamente']);\n  context.grafana.refresh(); \n} else {\n  context.grafana.notifyError(['Error', 'La simulación no pudo procesarse']);\n}",
+                  "confirm": false,
+                  "contentType": "application/json",
+                  "getPayload": "const payload = {\n  nodeId: \"${nodeId}\",\n  category: \"network\", // La categoría padre en tu JSON\n  field: \"v2xLatencyMs\",        // El campo exacto a simular\n  value: context.panel.elements.find(e => e.id === 'v2xLatencyMs').value // El ID de tu slider\n};\n\nreturn payload;",
+                  "header": [],
+                  "method": "POST",
+                  "payload": {},
+                  "payloadMode": "custom",
+                  "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/simulate_step"
+                },
+                "updateEnabled": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-18": {
+        "kind": "Panel",
+        "spec": {
+          "id": 18,
+          "title": "",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "",
+                      "version": "v0",
+                      "spec": {}
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "volkovlabs-form-panel",
+            "version": "6.3.2",
+            "spec": {
+              "options": {
+                "buttonGroup": {
+                  "orientation": "center",
+                  "size": "md"
+                },
+                "confirmModal": {
+                  "body": "Please confirm to update changed values",
+                  "cancel": "Cancel",
+                  "columns": {
+                    "include": [
+                      "name",
+                      "oldValue",
+                      "newValue"
+                    ],
+                    "name": "Label",
+                    "newValue": "New Value",
+                    "oldValue": "Old Value"
+                  },
+                  "confirm": "Confirm",
+                  "elementDisplayMode": "modified",
+                  "title": "Confirm update request"
+                },
+                "elementValueChanged": "",
+                "elements": [
+                  {
+                    "id": "app_latency_ms",
+                    "labelWidth": 19,
+                    "max": 100,
+                    "min": 0,
+                    "section": "",
+                    "step": 0.5,
+                    "title": "App Latency (ms)",
+                    "tooltip": "",
+                    "type": "slider",
+                    "uid": "523bf56a-4c7b-4aae-9b6d-bc350e32e3d7",
+                    "unit": "",
+                    "value": 0
+                  }
+                ],
+                "initial": {
+                  "code": "console.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log(dataQuery);",
+                  "contentType": "application/json",
+                  "getPayload": "return {}",
+                  "highlight": false,
+                  "highlightColor": "red",
+                  "method": "-",
+                  "payload": {}
+                },
+                "layout": {
+                  "orientation": "horizontal",
+                  "padding": 10,
+                  "sectionVariant": "default",
+                  "variant": "single"
+                },
+                "reset": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "process",
+                  "text": "Reset",
+                  "variant": "hidden"
+                },
+                "resetAction": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "getPayload": "return {}",
+                  "mode": "initial",
+                  "payload": {}
+                },
+                "saveDefault": {
+                  "icon": "save",
+                  "text": "Save Default",
+                  "variant": "hidden"
+                },
+                "submit": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "cloud-upload",
+                  "text": "Simulate Value",
+                  "variant": "primary"
+                },
+                "sync": false,
+                "update": {
+                  "code": "if (context.panel.response && context.panel.response.ok) {\n  context.grafana.notifySuccess(['Simulación', 'Enviada correctamente']);\n  context.grafana.refresh(); \n} else {\n  context.grafana.notifyError(['Error', 'La simulación no pudo procesarse']);\n}",
+                  "confirm": false,
+                  "contentType": "application/json",
+                  "getPayload": "const payload = {\n  nodeId: \"${nodeId}\",\n  category: \"cyber_backend\", // La categoría padre en tu JSON\n  field: \"performance.app_latency_ms\",        // El campo exacto a simular\n  value: context.panel.elements.find(e => e.id === 'app_latency_ms').value // El ID de tu slider\n};\n\nreturn payload;",
+                  "header": [],
+                  "method": "POST",
+                  "payload": {},
+                  "payloadMode": "custom",
+                  "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/simulate_step"
+                },
+                "updateEnabled": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-19": {
+        "kind": "Panel",
+        "spec": {
+          "id": 19,
+          "title": "",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "",
+                      "version": "v0",
+                      "spec": {}
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "volkovlabs-form-panel",
+            "version": "6.3.2",
+            "spec": {
+              "options": {
+                "buttonGroup": {
+                  "orientation": "center",
+                  "size": "md"
+                },
+                "confirmModal": {
+                  "body": "Please confirm to update changed values",
+                  "cancel": "Cancel",
+                  "columns": {
+                    "include": [
+                      "name",
+                      "oldValue",
+                      "newValue"
+                    ],
+                    "name": "Label",
+                    "newValue": "New Value",
+                    "oldValue": "Old Value"
+                  },
+                  "confirm": "Confirm",
+                  "elementDisplayMode": "modified",
+                  "title": "Confirm update request"
+                },
+                "elementValueChanged": "",
+                "elements": [
+                  {
+                    "id": "packetLoss",
+                    "labelWidth": 19,
+                    "max": 100,
+                    "min": 0,
+                    "section": "",
+                    "step": 1,
+                    "title": "Packet Loss",
+                    "tooltip": "",
+                    "type": "slider",
+                    "uid": "523bf56a-4c7b-4aae-9b6d-bc350e32e3d7",
+                    "unit": "",
+                    "value": 0
+                  }
+                ],
+                "initial": {
+                  "code": "console.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log(dataQuery);",
+                  "contentType": "application/json",
+                  "getPayload": "return {}",
+                  "highlight": false,
+                  "highlightColor": "red",
+                  "method": "-",
+                  "payload": {}
+                },
+                "layout": {
+                  "orientation": "horizontal",
+                  "padding": 10,
+                  "sectionVariant": "default",
+                  "variant": "single"
+                },
+                "reset": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "process",
+                  "text": "Reset",
+                  "variant": "hidden"
+                },
+                "resetAction": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "getPayload": "return {}",
+                  "mode": "initial",
+                  "payload": {}
+                },
+                "saveDefault": {
+                  "icon": "save",
+                  "text": "Save Default",
+                  "variant": "hidden"
+                },
+                "submit": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "cloud-upload",
+                  "text": "Simulate Value",
+                  "variant": "primary"
+                },
+                "sync": false,
+                "update": {
+                  "code": "if (context.panel.response && context.panel.response.ok) {\n  context.grafana.notifySuccess(['Simulación', 'Enviada correctamente']);\n  context.grafana.refresh(); \n} else {\n  context.grafana.notifyError(['Error', 'La simulación no pudo procesarse']);\n}",
+                  "confirm": false,
+                  "contentType": "application/json",
+                  "getPayload": "const payload = {\n  nodeId: \"${nodeId}\",\n  category: \"network\", // La categoría padre en tu JSON\n  field: \"packetLoss\",        // El campo exacto a simular\n  value: context.panel.elements.find(e => e.id === 'packetLoss').value // El ID de tu slider\n};\n\nreturn payload;",
+                  "header": [],
+                  "method": "POST",
+                  "payload": {},
+                  "payloadMode": "custom",
+                  "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/simulate_step"
+                },
+                "updateEnabled": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "id": 3,
+          "title": "",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "",
+                      "version": "v0",
+                      "spec": {}
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "volkovlabs-form-panel",
+            "version": "6.3.2",
+            "spec": {
+              "options": {
+                "buttonGroup": {
+                  "orientation": "center",
+                  "size": "md"
+                },
+                "confirmModal": {
+                  "body": "Please confirm to update changed values",
+                  "cancel": "Cancel",
+                  "columns": {
+                    "include": [
+                      "name",
+                      "oldValue",
+                      "newValue"
+                    ],
+                    "name": "Label",
+                    "newValue": "New Value",
+                    "oldValue": "Old Value"
+                  },
+                  "confirm": "Confirm",
+                  "elementDisplayMode": "modified",
+                  "title": "Confirm update request"
+                },
+                "elementValueChanged": "",
+                "elements": [
+                  {
+                    "id": "temp_sim",
+                    "labelWidth": 19,
+                    "max": 100,
+                    "min": 0,
+                    "section": "",
+                    "step": 0.5,
+                    "title": "Temperatura simulada",
+                    "tooltip": "",
+                    "type": "slider",
+                    "uid": "523bf56a-4c7b-4aae-9b6d-bc350e32e3d7",
+                    "unit": "",
+                    "value": 0
+                  }
+                ],
+                "initial": {
+                  "code": "console.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log(dataQuery);",
+                  "contentType": "application/json",
+                  "getPayload": "return {}",
+                  "highlight": false,
+                  "highlightColor": "red",
+                  "method": "-",
+                  "payload": {}
+                },
+                "layout": {
+                  "orientation": "horizontal",
+                  "padding": 10,
+                  "sectionVariant": "default",
+                  "variant": "single"
+                },
+                "reset": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "process",
+                  "text": "Reset",
+                  "variant": "hidden"
+                },
+                "resetAction": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "getPayload": "return {}",
+                  "mode": "initial",
+                  "payload": {}
+                },
+                "saveDefault": {
+                  "icon": "save",
+                  "text": "Save Default",
+                  "variant": "hidden"
+                },
+                "submit": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "cloud-upload",
+                  "text": "Simulate Value",
+                  "variant": "primary"
+                },
+                "sync": false,
+                "update": {
+                  "code": "if (context.panel.response && context.panel.response.ok) {\n  context.grafana.notifySuccess(['Simulación', 'Enviada correctamente']);\n  context.grafana.refresh(); \n} else {\n  context.grafana.notifyError(['Error', 'La simulación no pudo procesarse']);\n}",
+                  "confirm": false,
+                  "contentType": "application/json",
+                  "getPayload": "const payload = {\n  nodeId: \"${nodeId}\",\n  category: \"hardware\", // La categoría padre en tu JSON\n  field: \"temp\",        // El campo exacto a simular\n  value: context.panel.elements.find(e => e.id === 'temp_sim').value // El ID de tu slider\n};\n\nreturn payload;",
+                  "header": [],
+                  "method": "POST",
+                  "payload": {},
+                  "payloadMode": "custom",
+                  "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/simulate_step"
+                },
+                "updateEnabled": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "id": 4,
+          "title": "V2X Panel",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "yesoreyeram-infinity-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "ffiyskf0ks8w0b"
+                      },
+                      "spec": {
+                        "app": "grafana-assistant-app",
+                        "columns": [],
+                        "filterExpression": "nodeId == \"$nodeId\"  ",
+                        "filters": [],
+                        "format": "table",
+                        "global_query_id": "",
+                        "parser": "backend",
+                        "range": true,
+                        "root_selector": "$.entities.{  \n  \"nodeId\": nodeId,  \n  \"state\": simulation_state.sim_status,  \n  \"description\": description,  \n  \"type\": type,  \n  \"version\": version,  \n  \"lastUpdate\": lastUpdate,  \n  \"lon\": location.coordinates[0],  \n  \"lat\": location.coordinates[1]  \n}",
+                        "source": "url",
+                        "type": "json",
+                        "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/get_rsu_status",
+                        "url_options": {
+                          "data": "",
+                          "method": "GET"
+                        }
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "yesoreyeram-infinity-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "ffiyskf0ks8w0b"
+                      },
+                      "spec": {
+                        "app": "grafana-assistant-app",
+                        "columns": [],
+                        "filterExpression": "",
+                        "filters": [
+                          {
+                            "field": "nodeId",
+                            "operator": "equals",
+                            "value": [
+                              "RSU_001"
+                            ]
+                          }
+                        ],
+                        "format": "table",
+                        "global_query_id": "",
+                        "parser": "backend",
+                        "range": true,
+                        "root_selector": "$.entities.{  \n  \"nodeId\": nodeId,  \n  \"state\": simulation_state.sim_status,  \n  \"description\": description,  \n  \"type\": type,  \n  \"version\": version,  \n  \"lastUpdate\": lastUpdate,  \n  \"lon\": location.coordinates[0],  \n  \"lat\": location.coordinates[1]  \n}",
+                        "source": "url",
+                        "type": "json",
+                        "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/get_rsu_status",
+                        "url_options": {
+                          "data": "",
+                          "method": "GET"
+                        }
+                      }
+                    },
+                    "refId": "B",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "geomap",
+            "version": "13.1.0-24779284961",
+            "spec": {
+              "options": {
+                "basemap": {
+                  "config": {},
+                  "name": "Layer 0",
+                  "noRepeat": false,
+                  "type": "default"
+                },
+                "controls": {
+                  "mouseWheelZoom": true,
+                  "showAttribution": true,
+                  "showDebug": false,
+                  "showMeasure": false,
+                  "showScale": false,
+                  "showZoom": true
+                },
+                "layers": [
+                  {
+                    "config": {
+                      "showLegend": true,
+                      "style": {
+                        "color": {
+                          "field": "state",
+                          "fixed": "dark-green",
+                          "mode": "field"
+                        },
+                        "opacity": 0.6,
+                        "rotation": {
+                          "fixed": 0,
+                          "max": 360,
+                          "min": -360,
+                          "mode": "mod"
+                        },
+                        "size": {
+                          "fixed": 5,
+                          "max": 15,
+                          "min": 2
+                        },
+                        "symbol": {
+                          "fixed": "img/icons/marker/circle.svg",
+                          "mode": "fixed"
+                        },
+                        "symbolAlign": {
+                          "horizontal": "center",
+                          "vertical": "center"
+                        },
+                        "textConfig": {
+                          "fontSize": 12,
+                          "offsetX": 0,
+                          "offsetY": 0,
+                          "textAlign": "center",
+                          "textBaseline": "middle"
+                        }
+                      }
+                    },
+                    "filterData": {
+                      "id": "byRefId",
+                      "options": "B"
+                    },
+                    "layer-tooltip": true,
+                    "location": {
+                      "mode": "auto"
+                    },
+                    "name": "RSUs",
+                    "tooltip": true,
+                    "type": "markers"
+                  },
+                  {
+                    "config": {
+                      "showLegend": true,
+                      "style": {
+                        "color": {
+                          "field": "state",
+                          "fixed": "dark-green",
+                          "mode": "field"
+                        },
+                        "opacity": 1,
+                        "rotation": {
+                          "fixed": 0,
+                          "max": 360,
+                          "min": -360,
+                          "mode": "mod"
+                        },
+                        "size": {
+                          "fixed": 5,
+                          "max": 15,
+                          "min": 2
+                        },
+                        "symbol": {
+                          "fixed": "img/icons/marker/circle.svg",
+                          "mode": "fixed"
+                        },
+                        "symbolAlign": {
+                          "horizontal": "center",
+                          "vertical": "center"
+                        },
+                        "textConfig": {
+                          "fontSize": 12,
+                          "offsetX": 0,
+                          "offsetY": 0,
+                          "textAlign": "center",
+                          "textBaseline": "middle"
+                        }
+                      }
+                    },
+                    "filterData": {
+                      "id": "byRefId",
+                      "options": "A"
+                    },
+                    "location": {
+                      "mode": "auto"
+                    },
+                    "name": "SelectedRSU",
+                    "tooltip": true,
+                    "type": "markers"
+                  }
+                ],
+                "tooltip": {
+                  "mode": "details"
+                },
+                "view": {
+                  "allLayers": true,
+                  "dashboardVariable": false,
+                  "id": "fit",
+                  "lat": 0,
+                  "lon": 0,
+                  "noRepeat": false,
+                  "zoom": 15
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "mappings": [
+                    {
+                      "type": "value",
+                      "options": {
+                        "CRITICAL": {
+                          "text": "CRITICAL",
+                          "color": "red",
+                          "index": 0
+                        },
+                        "DEGRADED": {
+                          "text": "DEGRADED/WARNING",
+                          "color": "yellow",
+                          "index": 2
+                        },
+                        "HEALTHY": {
+                          "text": "HEALTHY",
+                          "color": "green",
+                          "index": 1
+                        },
+                        "OFF": {
+                          "text": "SIMULATION OFF",
+                          "color": "#969696",
+                          "index": 4
+                        },
+                        "OFFLINE": {
+                          "text": "OFFLINE/TIMEOUT",
+                          "color": "#9d9d9d",
+                          "index": 3
+                        }
+                      }
+                    }
+                  ],
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "id": 6,
+          "title": "Simulated Log",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "yesoreyeram-infinity-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "ffiyskf0ks8w0b"
+                      },
+                      "spec": {
+                        "columns": [],
+                        "filters": [],
+                        "format": "table",
+                        "global_query_id": "",
+                        "parser": "backend",
+                        "root_selector": "$.entities.{  \n \"RSU\": nodeId,\n  \"Detalles\": nodeId & \"  - SIMULADO - \" & simulation_state.reasons_sim,\n  \"timestamp\": simulation_state.lastSimUpdate\n}",
+                        "source": "url",
+                        "type": "json",
+                        "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/get_rsu_status",
+                        "url_options": {
+                          "data": "",
+                          "method": "GET"
+                        }
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [
+                {
+                  "kind": "Transformation",
+                  "group": "convertFieldType",
+                  "spec": {
+                    "options": {
+                      "conversions": [
+                        {
+                          "dateFormat": "YYYY-MM-DDTHH:mm:ssZ",
+                          "destinationType": "time",
+                          "targetField": "timestamp"
+                        }
+                      ],
+                      "fields": {}
+                    }
+                  }
+                }
+              ],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "13.1.0-24779284961",
+            "spec": {
+              "options": {
+                "dedupStrategy": "none",
+                "enableInfiniteScrolling": false,
+                "enableLogDetails": true,
+                "prettifyLogMessage": true,
+                "showControls": false,
+                "showFieldSelector": false,
+                "showLabels": false,
+                "showLevel": true,
+                "showLogAttributes": true,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "syntaxHighlighting": false,
+                "timestampResolution": "ms",
+                "unwrappedColumns": false,
+                "wrapLogMessage": false
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          },
+          "transparent": true
+        }
+      },
+      "panel-7": {
+        "kind": "Panel",
+        "spec": {
+          "id": 7,
+          "title": "Log",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "yesoreyeram-infinity-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "ffiyskf0ks8w0b"
+                      },
+                      "spec": {
+                        "columns": [
+                          {
+                            "selector": "timestamp",
+                            "text": "timestamp",
+                            "type": "timestamp"
+                          },
+                          {
+                            "selector": "nodeId",
+                            "text": "RSU",
+                            "type": "string"
+                          },
+                          {
+                            "selector": "reasons",
+                            "text": "Detalles",
+                            "type": "string"
+                          }
+                        ],
+                        "filters": [],
+                        "format": "table",
+                        "global_query_id": "",
+                        "parser": "backend",
+                        "root_selector": "",
+                        "source": "url",
+                        "type": "json",
+                        "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/get_history",
+                        "url_options": {
+                          "data": "",
+                          "method": "GET"
+                        }
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "13.1.0-24779284961",
+            "spec": {
+              "options": {
+                "dedupStrategy": "none",
+                "displayedFields": [
+                  "RSU",
+                  "___LOG_LINE_BODY___"
+                ],
+                "enableInfiniteScrolling": false,
+                "enableLogDetails": false,
+                "prettifyLogMessage": true,
+                "showControls": false,
+                "showFieldSelector": false,
+                "showLabels": false,
+                "showLevel": true,
+                "showLogAttributes": true,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "syntaxHighlighting": true,
+                "timestampResolution": "ms",
+                "unwrappedColumns": false,
+                "wrapLogMessage": true
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          },
+          "transparent": true
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "id": 8,
+          "title": "Update expected behavior",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "",
+                      "version": "v0",
+                      "spec": {}
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "volkovlabs-form-panel",
+            "version": "6.3.2",
+            "spec": {
+              "options": {
+                "buttonGroup": {
+                  "orientation": "center",
+                  "size": "md"
+                },
+                "confirmModal": {
+                  "body": "Please confirm to update changed values",
+                  "cancel": "Cancel",
+                  "columns": {
+                    "include": [
+                      "name",
+                      "oldValue",
+                      "newValue"
+                    ],
+                    "name": "Label",
+                    "newValue": "New Value",
+                    "oldValue": "Old Value"
+                  },
+                  "confirm": "Confirm",
+                  "elementDisplayMode": "modified",
+                  "title": "Confirm update request"
+                },
+                "elementValueChanged": "",
+                "elements": [
+                  {
+                    "allowCustomValue": true,
+                    "id": "categoria",
+                    "labelWidth": 17,
+                    "options": [
+                      {
+                        "id": "hardware",
+                        "label": "hardware",
+                        "type": "string",
+                        "value": "hardware"
+                      },
+                      {
+                        "id": "network",
+                        "label": "network",
+                        "type": "string",
+                        "value": "network"
+                      },
+                      {
+                        "id": "cyber_backend",
+                        "label": "cyber_backend",
+                        "type": "string",
+                        "value": "cyber_backend"
+                      }
+                    ],
+                    "optionsSource": "Custom",
+                    "section": "",
+                    "title": "Categoiría",
+                    "tooltip": "",
+                    "type": "select",
+                    "uid": "e631b962-14f4-4e26-b66a-8801f228c82c",
+                    "unit": "",
+                    "value": ""
+                  },
+                  {
+                    "allowCustomValue": false,
+                    "id": "campo_hardware",
+                    "labelWidth": 17,
+                    "options": [
+                      {
+                        "id": "cpuPct",
+                        "label": "cpuPct",
+                        "type": "string",
+                        "value": "cpuPct"
+                      },
+                      {
+                        "id": "temp",
+                        "label": "temp",
+                        "type": "string",
+                        "value": "temp"
+                      },
+                      {
+                        "id": "loadAvg",
+                        "label": "loadAvg",
+                        "type": "string",
+                        "value": "loadAvg"
+                      },
+                      {
+                        "id": "memPct",
+                        "label": "memPct",
+                        "type": "string",
+                        "value": "memPct"
+                      }
+                    ],
+                    "optionsSource": "Custom",
+                    "section": "",
+                    "showIf": "const el = context.panel.elements.find(function(e) { return e.id === 'categoria'; }); return el ? el.value === 'hardware' : false;",
+                    "title": "Campo",
+                    "tooltip": "",
+                    "type": "select",
+                    "uid": "campo-hw-001",
+                    "unit": "",
+                    "value": ""
+                  },
+                  {
+                    "allowCustomValue": false,
+                    "id": "campo_network",
+                    "labelWidth": 17,
+                    "options": [
+                      {
+                        "id": "v2xLatencyMs",
+                        "label": "v2xLatencyMs",
+                        "type": "string",
+                        "value": "v2xLatencyMs"
+                      },
+                      {
+                        "id": "packetLoss",
+                        "label": "packetLoss",
+                        "type": "string",
+                        "value": "packetLoss"
+                      }
+                    ],
+                    "optionsSource": "Custom",
+                    "section": "",
+                    "showIf": "const el = context.panel.elements.find(function(e) { return e.id === 'categoria'; }); return el ? el.value === 'network' : false;",
+                    "title": "Campo",
+                    "tooltip": "",
+                    "type": "select",
+                    "uid": "campo-net-001",
+                    "unit": "",
+                    "value": ""
+                  },
+                  {
+                    "allowCustomValue": false,
+                    "id": "campo_cyber_backend",
+                    "labelWidth": 17,
+                    "options": [
+                      {
+                        "id": "performance.app_latency_ms",
+                        "label": "performance.app_latency_ms",
+                        "type": "string",
+                        "value": "performance.app_latency_ms"
+                      },
+                      {
+                        "id": "performance.queue_fill_pct",
+                        "label": "performance.queue_fill_pct",
+                        "type": "string",
+                        "value": "performance.queue_fill_pct"
+                      }
+                    ],
+                    "optionsSource": "Custom",
+                    "section": "",
+                    "showIf": "const el = context.panel.elements.find(function(e) { return e.id === 'categoria'; }); return el ? el.value === 'cyber_backend' : false;",
+                    "title": "Campo",
+                    "tooltip": "",
+                    "type": "select",
+                    "uid": "campo-cb-001",
+                    "unit": "",
+                    "value": ""
+                  },
+                  {
+                    "id": "warning",
+                    "labelWidth": 17,
+                    "section": "",
+                    "title": "Warnning threshold",
+                    "tooltip": "",
+                    "type": "number",
+                    "uid": "728b7453-cde7-4aaa-a356-1fe7438681d6",
+                    "unit": "",
+                    "value": 0
+                  },
+                  {
+                    "id": "critical",
+                    "labelWidth": 17,
+                    "section": "",
+                    "title": "Critical Threshold",
+                    "tooltip": "",
+                    "type": "number",
+                    "uid": "1ff9b274-8bc3-4ed3-a142-964ee27f55a7",
+                    "unit": "",
+                    "value": 0
+                  }
+                ],
+                "initial": {
+                  "code": "return;",
+                  "contentType": "application/json",
+                  "getPayload": "return {}",
+                  "highlight": false,
+                  "highlightColor": "red",
+                  "method": "-",
+                  "payload": {}
+                },
+                "layout": {
+                  "orientation": "horizontal",
+                  "padding": 8,
+                  "sectionVariant": "default",
+                  "sections": [
+                    {
+                      "id": "Hardware",
+                      "name": "Hardware"
+                    }
+                  ],
+                  "variant": "single"
+                },
+                "reset": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "process",
+                  "text": "Reset",
+                  "variant": "hidden"
+                },
+                "resetAction": {
+                  "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+                  "confirm": false,
+                  "getPayload": "return {}",
+                  "mode": "initial",
+                  "payload": {}
+                },
+                "saveDefault": {
+                  "icon": "save",
+                  "text": "Save Default",
+                  "variant": "hidden"
+                },
+                "submit": {
+                  "backgroundColor": "purple",
+                  "foregroundColor": "yellow",
+                  "icon": "cloud-upload",
+                  "text": "Update",
+                  "variant": "primary"
+                },
+                "sync": true,
+                "update": {
+                  "code": "if (context.panel.response && context.panel.response.ok) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.refresh();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values. Check simulated mode status']);\n}",
+                  "confirm": false,
+                  "contentType": "application/json",
+                  "getPayload": "const elements = context.panel.elements;\nconst categoria = elements.find(e => e.id === 'categoria').value;\nconst campoEl = elements.find(e => e.id === 'campo_' + categoria);\n\nreturn {\n  nodeId: \"${nodeId}\",\n  categoria: categoria,\n  campo: campoEl ? campoEl.value : '',\n  warn: parseFloat(elements.find(e => e.id === 'warning').value),\n  crit: parseFloat(elements.find(e => e.id === 'critical').value)\n};",
+                  "method": "POST",
+                  "payload": {},
+                  "payloadMode": "custom",
+                  "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/update_twin_config"
+                },
+                "updateEnabled": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "layout": {
+      "kind": "GridLayout",
+      "spec": {
+        "items": [
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 0,
+              "width": 18,
+              "height": 20,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-4"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 18,
+              "y": 0,
+              "width": 6,
+              "height": 2,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-13"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 18,
+              "y": 2,
+              "width": 6,
+              "height": 6,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-7"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 18,
+              "y": 8,
+              "width": 6,
+              "height": 5,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-6"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 18,
+              "y": 13,
+              "width": 6,
+              "height": 7,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-8"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 20,
+              "width": 6,
+              "height": 3,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-12"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 6,
+              "y": 20,
+              "width": 6,
+              "height": 3,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-15"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 12,
+              "y": 20,
+              "width": 6,
+              "height": 3,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-17"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 23,
+              "width": 6,
+              "height": 3,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-10"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 6,
+              "y": 23,
+              "width": 6,
+              "height": 3,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-18"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 12,
+              "y": 23,
+              "width": 6,
+              "height": 3,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-19"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 26,
+              "width": 6,
+              "height": 3,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-11"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 6,
+              "y": 26,
+              "width": 6,
+              "height": 3,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-16"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 29,
+              "width": 6,
+              "height": 3,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-3"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "links": [],
+    "liveNow": false,
+    "preload": false,
+    "tags": [],
+    "timeSettings": {
+      "timezone": "browser",
+      "from": "now-6h",
+      "to": "now",
+      "autoRefresh": "",
+      "autoRefreshIntervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "hideTimepicker": false,
+      "fiscalYearStartMonth": 0
+    },
+    "title": "Simulated dashboard",
+    "variables": [
+      {
+        "kind": "CustomVariable",
+        "spec": {
+          "name": "temp_sim",
+          "query": "0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100",
+          "current": {
+            "text": "0",
+            "value": "0"
+          },
+          "options": [],
+          "multi": false,
+          "includeAll": false,
+          "hide": "hideVariable",
+          "skipUrlSync": false,
+          "allowCustomValue": true,
+          "valuesFormat": "csv"
+        }
+      },
+      {
+        "kind": "CustomVariable",
+        "spec": {
+          "name": "nodeId",
+          "query": "",
+          "current": {
+            "text": "",
+            "value": ""
+          },
+          "options": [],
+          "multi": false,
+          "includeAll": false,
+          "label": "node id comming from other dashboard",
+          "hide": "hideVariable",
+          "skipUrlSync": false,
+          "allowCustomValue": true,
+          "valuesFormat": "csv"
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "name": "VAR_ACTIVE",
+          "current": {
+            "text": "RSU-Madrid-01",
+            "value": "RSU-Madrid-01"
+          },
+          "label": "VAR_ACTIVE",
+          "hide": "hideVariable",
+          "refresh": "onTimeRangeChanged",
+          "skipUrlSync": false,
+          "query": {
+            "kind": "DataQuery",
+            "group": "yesoreyeram-infinity-datasource",
+            "version": "v0",
+            "datasource": {
+              "name": "ffiyskf0ks8w0b"
+            },
+            "spec": {
+              "infinityQuery": {
+                "columns": [],
+                "data": "values\nfoo\nbar\nbaz",
+                "filters": [],
+                "format": "table",
+                "parser": "backend",
+                "refId": "",
+                "root_selector": "$.entities[id = \"$nodeId\"].simulation_state.active ? \"true\":\"false\"",
+                "source": "url",
+                "type": "json",
+                "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/get_rsu_status",
+                "url_options": {
+                  "data": "",
+                  "method": "GET"
+                }
+              },
+              "parser": "backend",
+              "queryType": "infinity",
+              "refId": "variable",
+              "root_selector": ".entities[] | select(.nodeId == \"${nodeId}\") | .simulation_state.active",
+              "type": "json",
+              "url": "https://brain-v2x-madrid-cyanaccaf3fuapgp.westeurope-01.azurewebsites.net/api/get_rsu_status"
+            }
+          },
+          "regex": "",
+          "regexApplyTo": "value",
+          "sort": "disabled",
+          "definition": "",
+          "options": [],
+          "multi": false,
+          "includeAll": false,
+          "allowCustomValue": true
+        }
+      }
+    ]
+  }
+}
