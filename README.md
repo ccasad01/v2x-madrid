@@ -3,6 +3,10 @@
 Este repositorio contiene el código fuente y la infraestructura como código (IaC) de un sistema de Gemelos Digitales (Digital Twins) para unidades de carretera (RSUs) en entornos V2X (Vehicle-to-Everything). 
 
 El proyecto permite monitorizar, simular y gestionar el ciclo de vida de una flota de nodos Edge desplegados en la ciudad de Madrid, utilizando una arquitectura 100% Serverless en Azure y observabilidad avanzada en Grafana.
+<img width="1600" height="972" alt="image" src="https://github.com/user-attachments/assets/68f38341-80bd-4191-aa55-ea1ef9f49578" />
+
+<img width="2242" height="1221" alt="image" src="https://github.com/user-attachments/assets/daecb990-a363-4e39-8669-a77d4edcb51b" />
+
 
 ## Arquitectura del Sistema
 
